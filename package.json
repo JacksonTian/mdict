@@ -1,0 +1,21 @@
+{
+  "name": "mdx_builder",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "directories": {
+    "lib": "lib"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "lint": "eslint --fix ./bin/*.mjs ./lib/*.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "adler32": "^0.1.7",
+    "debug": "^4.3.4",
+    "xml2js": "^0.6.2"
+  }
+}
