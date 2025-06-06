@@ -5,3 +5,6 @@ html/
 *.mdx
 
 coverage/
+
+.DS_Store
+output/
