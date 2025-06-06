@@ -1,22 +1,27 @@
 #!/usr/bin/env node
 
-
 import http from 'http';
 import url from 'url';
 import fs from 'fs/promises';
 import path from 'path';
 
-import MDX from '../lib/mdx.js';
+import { MDX } from '../lib/mdx.js';
 
 const [filepath] = process.argv.slice(2);
 
 const mdx = new MDX(filepath);
 await mdx.build();
 const index = await mdx.index();
+
 const map = index.reduceRight((pre, cur) => {
   pre.set(cur.key_text, cur);
   return pre;
 }, new Map());
+
+const keys = [];
+for (const key of map.keys()) {
+  keys.push(key);
+}
 
 http.createServer((req, res) => {
   const parsed = url.parse(req.url, true);

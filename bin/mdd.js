@@ -1,7 +1,6 @@
 #!/usr/bin/env node
 
-
-import MDD from '../lib/mdd.js';
+import { MDD } from '../lib/mdd.js';
 
 const [filepath] = process.argv.slice(2);
 

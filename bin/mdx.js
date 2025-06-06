@@ -1,7 +1,6 @@
 #!/usr/bin/env node
 
-
-import MDX from '../lib/mdx.js';
+import { MDX } from '../lib/mdx.js';
 
 const [filepath] = process.argv.slice(2);
 
