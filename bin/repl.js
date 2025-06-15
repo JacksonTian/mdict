@@ -1,18 +1,23 @@
 #!/usr/bin/env node
 import readline from 'readline';
-import { MDX } from '../lib/mdx.js';
+import process from 'process';
 
-const [filepath] = process.argv.slice(2);
-if (!filepath) {
-  console.error('用法: node bin/repl.js <mdx文件路径>');
+import MDict from '../lib/mdict.js';
+
+const [ mdxPath, mddPath ] = process.argv.slice(2);
+if (!mdxPath) {
+  console.error('用法: node bin/repl.js <mdx文件路径> [mdx文件路径]');
   process.exit(1);
 }
 
-const mdx = new MDX(filepath);
-await mdx.build();
-const index = await mdx.index();
+const mdict = new MDict({
+  mdx: mdxPath,
+  mdd: mddPath
+});
 
-const map = index.reduceRight((pre, cur) => {
+const {mdx: mdxIndex, mdd: mddIndex} = await mdict.buildIndex();
+console.log(`载入词条：${mdxIndex.length}单词, 资源：${mddIndex.length} 个`);
+const map = mdxIndex.reduceRight((pre, cur) => {
   pre.set(cur.key_text, cur);
   return pre;
 }, new Map());
@@ -44,8 +49,8 @@ rl.on('line', async (line) => {
 
   const found = map.get(word);
   if (found) {
-    const result = await mdx.lookup(found);
-    console.log(result);
+    const result = await mdict.mdx.lookup(found);
+    console.log(result.toString());
   } else {
     console.log('未找到该单词。');
   }

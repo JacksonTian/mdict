@@ -4,6 +4,9 @@
   "description": "",
   "main": "lib/index.js",
   "type": "module",
+  "bin": {
+    "mdict-serve": "./bin/serve.js"
+  },
   "directories": {
     "lib": "lib"
   },
