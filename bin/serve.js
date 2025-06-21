@@ -4,8 +4,33 @@ import http from 'http';
 import url from 'url';
 import process from 'process';
 import { Buffer } from 'buffer';
+import path from 'path';
+import { promisify } from 'util';
+import fs from 'fs';
+import { stat } from 'fs/promises';
 
 import MDict from '../lib/mdict.js';
+
+const exists = promisify(fs.exists);
+
+const getMimeType = (function () {
+  const types = {
+    '.html': 'text/html',
+    '.js': 'text/javascript',
+    '.css': 'text/css',
+    '.json': 'application/json',
+    '.png': 'image/png',
+    '.jpg': 'image/jpg',
+    '.gif': 'image/gif',
+    '.svg': 'image/svg+xml',
+    '.wav': 'audio/wav',
+  };
+
+  return function (filename) {
+    const ext = path.extname(filename);
+    return types[ext] || 'application/octet-stream';
+  };
+})();
 
 const [mdxPath, mddPath, portStr] = process.argv.slice(2);
 
@@ -18,6 +43,8 @@ if (!mdxPath) {
 const port = Number(portStr) || 8989;
 
 const mdict = new MDict({mdx: mdxPath, mdd: mddPath});
+
+const dictDir = path.dirname(mdxPath);
 
 const {mdx: mdxIndex, mdd: mddIndex} = await mdict.buildIndex();
 
@@ -133,10 +160,8 @@ http.createServer((req, res) => {
 
       if (found) {
         const result = await mdict.mdx.lookup(found);
-        console.log(result);
         const content = result.toString().trim();
         if (content.startsWith('@@@LINK=')) {
-          console.log(Buffer.from(content));
           res.writeHead(302, {
             'location': `/search?word=${content.substring(8, content.length - 3)}`
           });
@@ -170,6 +195,18 @@ http.createServer((req, res) => {
       });
       res.write(result);
       res.end();
+      return;
+    }
+
+    // other static files
+    const staticFilePath = path.join(dictDir, pathname);
+    if (await exists(staticFilePath)) {
+      const result = await stat(staticFilePath);
+      res.writeHead(200, {
+        'Content-Type': getMimeType(staticFilePath),
+        'Content-Length': result.size
+      });
+      fs.createReadStream(staticFilePath).pipe(res);
       return;
     }
 
