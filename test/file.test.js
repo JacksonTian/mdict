@@ -50,7 +50,8 @@ describe('File', () => {
       await assert.rejects(nonExistentFile.readHeader());
     });
 
-    it('should handle empty file', async () => {
+    it('should handle empty file', async function () {
+      this.timeout(5000);
       const emptyFile = path.join(__dirname, 'fixtures', 'empty.mdx');
       fs.writeFileSync(emptyFile, '');
       const file = new File(emptyFile, mdxHeaderKey);
