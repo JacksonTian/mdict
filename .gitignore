@@ -8,3 +8,7 @@ coverage/
 
 .DS_Store
 output/
+
+*.tgz
+
+resources/

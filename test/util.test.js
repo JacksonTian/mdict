@@ -1,9 +1,8 @@
 import { Buffer } from 'buffer';
-import { fastDecrypt } from '../lib/util.js';
-
-import { ripemd128 } from '../lib/ripemd128.js';
-
 import assert from 'assert';
+
+import { fastDecrypt } from '../lib/util.js';
+import { ripemd128 } from '../lib/ripemd128.js';
 
 describe('fastDecrypt', function () {
     it('should decrypt a given ciphertext', () => {
