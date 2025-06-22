@@ -1,3 +1,4 @@
+import { Buffer } from 'buffer';
 import { File } from '../lib/file.js';
 import fs from 'fs';
 import path from 'path';
@@ -51,7 +52,7 @@ describe('File', () => {
     });
 
     it('should handle empty file', async function () {
-      this.timeout(5000);
+      // this.timeout(5000);
       const emptyFile = path.join(__dirname, 'fixtures', 'empty.mdx');
       fs.writeFileSync(emptyFile, '');
       const file = new File(emptyFile, mdxHeaderKey);

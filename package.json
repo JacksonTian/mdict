@@ -40,5 +40,6 @@
       "lcov"
     ],
     "all": true
-  }
+  },
+  "files": ["bin", "lib"]
 }
